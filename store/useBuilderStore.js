@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { generateId } from "@/lib/utils";
+import { generateElementId } from "@/lib/utils";
 import { ELEMENT_DEFAULTS } from "@/components/elements/registry";
 
 export const useBuilderStore = create((set) => ({
@@ -35,9 +35,10 @@ export const useBuilderStore = create((set) => ({
   addElement: (type, pos) =>
     set((state) => {
       const defaults = ELEMENT_DEFAULTS[type];
+      const id = generateElementId(type, state.elements);
 
       const newElement = {
-        id: generateId(),
+        id,
         type,
         content: defaults.content,
         position: {
