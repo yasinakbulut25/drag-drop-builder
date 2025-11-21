@@ -7,10 +7,16 @@ import TextContentElement from "../elements/text/TextContentElement";
 import SliderElement from "../elements/slider/SliderElement";
 import FooterElement from "../elements/footer/FooterElement";
 import { getElementWrapperClassAndStyle } from "@/lib/utils";
-import { MoveDiagonal2Icon } from "lucide-react";
+import { MoveDiagonal2Icon, Trash2Icon } from "lucide-react";
 
 export default function ElementRenderer({ element }) {
-  const { selectedId, selectElement, collisionId } = useBuilderStore();
+  const {
+    selectedId,
+    selectElement,
+    collisionId,
+    clearCollision,
+    removeElement,
+  } = useBuilderStore();
   const isCollision = collisionId === element.id;
 
   const renderByType = () => {
@@ -65,6 +71,8 @@ export default function ElementRenderer({ element }) {
   const canResize =
     !isSticky && !isBottom && !isFixed && selectedId === element.id;
 
+  const isDeletable = selectedId === element.id;
+
   return (
     <div
       className={wrapperClass}
@@ -79,6 +87,16 @@ export default function ElementRenderer({ element }) {
         <MoveDiagonal2Icon
           className="absolute bottom-0 right-0 w-4 h-4 bg-indigo-500 text-white p-0.5 rounded-sm cursor-se-resize"
           onMouseDown={(e) => handleResizeStart(e, element)}
+        />
+      )}
+
+      {isDeletable && (
+        <Trash2Icon
+          className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white p-0.5 rounded-sm cursor-pointer"
+          onMouseDown={(e) => {
+            removeElement(selectedId);
+            clearCollision();
+          }}
         />
       )}
       {renderByType()}

@@ -61,6 +61,12 @@ export const useBuilderStore = create((set) => ({
       };
     }),
 
+  removeElement: (id) =>
+    set((state) => ({
+      elements: state.elements.filter((el) => el.id !== id),
+      selectedId: state.selectedId === id ? null : state.selectedId,
+    })),
+
   selectElement: (id) => set({ selectedId: id }),
 
   moveElement: (id, x, y) =>
