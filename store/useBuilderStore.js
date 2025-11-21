@@ -30,6 +30,7 @@ export const useBuilderStore = create((set) => ({
   resizeStartHeight: 0,
   resizeStartX: 0,
   resizeStartY: 0,
+  collisionId: null,
 
   addElement: (type, pos) =>
     set((state) => {
@@ -104,6 +105,16 @@ export const useBuilderStore = create((set) => ({
             }
           : el
       ),
+    })),
+
+  setCollision: (id) =>
+    set(() => ({
+      collisionId: id,
+    })),
+
+  clearCollision: () =>
+    set(() => ({
+      collisionId: null,
     })),
 
   toggleGrid: () =>

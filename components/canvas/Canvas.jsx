@@ -6,6 +6,7 @@ import { useBuilderStore } from "@/store/useBuilderStore";
 import { calculateDropPosition } from "@/lib/dragEngine/dropCalculator";
 import { allowDrop } from "@/lib/dragEngine/dragHandlers";
 import ElementRenderer from "./ElementRenderer";
+import { isColliding } from "@/lib/dragEngine/collision";
 
 export default function Canvas() {
   const {
@@ -22,6 +23,8 @@ export default function Canvas() {
     resizeStartX,
     resizeStartY,
     resizeElement,
+    setCollision,
+    clearCollision,
   } = useBuilderStore();
 
   const handleDrop = (e) => {
@@ -71,12 +74,50 @@ export default function Canvas() {
         }
 
         moveElement(draggingId, x, y);
+
+        const movingEl = elements.find((el) => el.id === draggingId);
+
+        const movingBox = {
+          x,
+          y,
+          width:
+            typeof movingEl.position.width === "number"
+              ? movingEl.position.width
+              : 200,
+          height:
+            typeof movingEl.position.height === "number"
+              ? movingEl.position.height
+              : 50,
+        };
+
+        let collidedId = null;
+
+        elements.forEach((el) => {
+          if (el.id === draggingId) return;
+
+          const box = {
+            x: el.position.x,
+            y: el.position.y,
+            width:
+              typeof el.position.width === "number" ? el.position.width : 200,
+            height:
+              typeof el.position.height === "number" ? el.position.height : 50,
+          };
+
+          if (isColliding(movingBox, box)) {
+            collidedId = el.id;
+          }
+        });
+
+        if (collidedId) setCollision(collidedId);
+        else clearCollision();
       }
     };
 
     const handleMouseUp = () => {
       useBuilderStore.setState({ draggingId: null });
       useBuilderStore.getState().stopResize();
+      clearCollision();
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -98,6 +139,9 @@ export default function Canvas() {
     resizeStartWidth,
     resizeStartHeight,
     resizeElement,
+    elements,
+    setCollision,
+    clearCollision,
   ]);
 
   const canvasStyle = {

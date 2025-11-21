@@ -10,7 +10,8 @@ import { getElementWrapperClassAndStyle } from "@/lib/utils";
 import { MoveDiagonal2Icon } from "lucide-react";
 
 export default function ElementRenderer({ element }) {
-  const { selectedId, selectElement } = useBuilderStore();
+  const { selectedId, selectElement, collisionId } = useBuilderStore();
+  const isCollision = collisionId === element.id;
 
   const renderByType = () => {
     switch (element.type) {
@@ -31,7 +32,8 @@ export default function ElementRenderer({ element }) {
 
   const { wrapperClass, wrapperStyle } = getElementWrapperClassAndStyle(
     element,
-    selectedId
+    selectedId,
+    isCollision
   );
 
   const isSticky = element.positionBehavior === "sticky-top";
