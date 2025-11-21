@@ -41,8 +41,8 @@ export const ELEMENT_DEFAULTS = {
   },
 
   "text-content": {
-    width: "auto",
-    height: "auto",
+    width: 230,
+    height: 24,
     positionBehavior: "relative",
     content: {
       html: "",
