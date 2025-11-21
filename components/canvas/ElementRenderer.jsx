@@ -6,6 +6,7 @@ import CardElement from "../elements/card/CardElement";
 import TextContentElement from "../elements/text/TextContentElement";
 import SliderElement from "../elements/slider/SliderElement";
 import FooterElement from "../elements/footer/FooterElement";
+import { getElementWrapperClassAndStyle } from "@/lib/utils";
 
 export default function ElementRenderer({ element }) {
   const { selectedId, selectElement } = useBuilderStore();
@@ -27,42 +28,33 @@ export default function ElementRenderer({ element }) {
     }
   };
 
-  const isSticky = element.positionBehavior === "sticky-top";
-  const isBottom = element.positionBehavior === "bottom";
+  const { wrapperClass, wrapperStyle } = getElementWrapperClassAndStyle(
+    element,
+    selectedId
+  );
 
-  let wrapperClass = `
-    ${
-      selectedId === element.id
-        ? "outline-2 outline-offset-2 outline-indigo-600 rounded"
-        : ""
-    }
-    ${isSticky ? "sticky top-0 z-50" : ""}
-    ${isBottom ? "absolute bottom-0 z-50" : ""}
-    ${!isSticky && !isBottom ? "absolute" : ""}
-  `;
+  const handleMouseDown = (e) => {
+    if (
+      element.positionBehavior === "sticky-top" ||
+      element.positionBehavior === "bottom" ||
+      element.fixed
+    )
+      return;
 
-  if (element.fixed) {
-    wrapperClass = `${wrapperClass} fixed fixed-width`;
-  }
+    e.stopPropagation();
 
-  const wrapperStyle =
-    !isSticky && !isBottom
-      ? {
-          top: element.position.y,
-          left: element.position.x,
-          width: element.width,
-          height: element.height === "auto" ? "auto" : element.height,
-          zIndex: element.zIndex,
-        }
-      : {
-          width: element.width,
-          height: element.height,
-        };
+    useBuilderStore.setState({
+      draggingId: element.id,
+      dragOffsetX: e.clientX - element.position.x,
+      dragOffsetY: e.clientY - element.position.y,
+    });
+  };
 
   return (
     <div
       className={wrapperClass}
       style={wrapperStyle}
+      onMouseDown={handleMouseDown}
       onClick={(e) => {
         e.stopPropagation();
         selectElement(element.id);

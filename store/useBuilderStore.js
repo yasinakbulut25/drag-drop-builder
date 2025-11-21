@@ -3,8 +3,28 @@ import { generateId } from "@/lib/utils";
 import { ELEMENT_DEFAULTS } from "@/components/elements/registry";
 
 export const useBuilderStore = create((set) => ({
+  project: {
+    name: "Test Builder Layout",
+    version: "1.0",
+    created: new Date().toISOString(),
+    lastModified: new Date().toISOString(),
+  },
+
+  canvas: {
+    width: 1200,
+    height: 800,
+    grid: {
+      enabled: true,
+      size: 10,
+      snap: true,
+    },
+  },
+
   elements: [],
   selectedId: null,
+  draggingId: null,
+  dragOffsetX: 0,
+  dragOffsetY: 0,
 
   addElement: (type, pos) =>
     set((state) => {
@@ -27,7 +47,6 @@ export const useBuilderStore = create((set) => ({
       };
 
       return {
-        ...state,
         elements: [...state.elements, newElement],
         project: {
           ...state.project,
@@ -37,4 +56,31 @@ export const useBuilderStore = create((set) => ({
     }),
 
   selectElement: (id) => set({ selectedId: id }),
+
+  moveElement: (id, x, y) =>
+    set((state) => ({
+      elements: state.elements.map((el) =>
+        el.id === id
+          ? {
+              ...el,
+              position: {
+                ...el.position,
+                x,
+                y,
+              },
+            }
+          : el
+      ),
+    })),
+
+  toggleGrid: () =>
+    set((state) => ({
+      canvas: {
+        ...state.canvas,
+        grid: {
+          ...state.canvas.grid,
+          enabled: !state.canvas.grid.enabled,
+        },
+      },
+    })),
 }));

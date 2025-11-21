@@ -7,8 +7,11 @@ import {
   MousePointerClickIcon,
   TypeIcon,
   PanelBottomIcon,
+  EyeIcon,
+  EyeOffIcon,
 } from "lucide-react";
 import ElementItem from "./ElementItem";
+import { useBuilderStore } from "@/store/useBuilderStore";
 
 const Elements = [
   {
@@ -39,6 +42,8 @@ const Elements = [
 ];
 
 export default function Sidebar() {
+  const { canvas, toggleGrid } = useBuilderStore();
+
   return (
     <aside className="w-72 bg-zinc-50 border-l border-zinc-200 px-4 py-6 z-50">
       <div className="flex items-center gap-2 mb-6">
@@ -55,6 +60,22 @@ export default function Sidebar() {
             icon={item.icon}
           />
         ))}
+        <button
+          onClick={toggleGrid}
+          className="cursor-pointer w-full flex items-center gap-2 p-3  text-white text-sm bg-indigo-500 rounded-lg"
+        >
+          {canvas.grid.enabled ? (
+            <>
+              <EyeOffIcon className="text-white min-w-5 w-5" />
+              Grid Gizle
+            </>
+          ) : (
+            <>
+              <EyeIcon className="text-white min-w-5 w-5" />
+              Grid Göster
+            </>
+          )}
+        </button>
       </div>
     </aside>
   );
