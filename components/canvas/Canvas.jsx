@@ -7,6 +7,7 @@ import { calculateDropPosition } from "@/lib/dragEngine/dropCalculator";
 import { allowDrop } from "@/lib/dragEngine/dragHandlers";
 import ElementRenderer from "./ElementRenderer";
 import { checkCollision } from "@/lib/dragEngine/collisionCheck";
+import { ELEMENT_DEFAULTS } from "../elements/registry";
 
 export default function Canvas() {
   const {
@@ -32,7 +33,27 @@ export default function Canvas() {
   const handleDrop = (e) => {
     e.preventDefault();
     const type = e.dataTransfer.getData("element-type");
-    const pos = calculateDropPosition(e);
+    let pos = calculateDropPosition(e);
+
+    const canvasRoot = document.getElementById("canvas-root");
+    const canvasHeight = canvasRoot ? canvasRoot.scrollHeight : 800;
+
+    if (type === "header") {
+      pos = {
+        x: 0,
+        y: ELEMENT_DEFAULTS.header.height,
+      };
+    }
+
+    if (type === "footer") {
+      const footerHeight = ELEMENT_DEFAULTS.footer.height;
+
+      pos = {
+        x: 0,
+        y: canvasHeight - footerHeight,
+      };
+    }
+
     addElement(type, pos);
   };
 
