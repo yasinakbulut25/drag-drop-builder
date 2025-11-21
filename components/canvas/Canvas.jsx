@@ -44,7 +44,15 @@ export default function Canvas() {
         const deltaY = e.clientY - resizeStartY;
 
         let newWidth = resizeStartWidth + deltaX;
-        let newHeight = resizeStartHeight + deltaY;
+        let newHeight;
+
+        const ratio = useBuilderStore.getState().resizeAspectRatio;
+
+        if (ratio) {
+          newHeight = newWidth / ratio;
+        } else {
+          newHeight = resizeStartHeight + deltaY;
+        }
 
         if (canvas.grid.enabled && canvas.grid.snap) {
           const size = canvas.grid.size;
@@ -148,6 +156,8 @@ export default function Canvas() {
     elements,
     setCollision,
     clearCollision,
+    collisionId,
+    restoreLastSafeState,
   ]);
 
   const canvasStyle = {

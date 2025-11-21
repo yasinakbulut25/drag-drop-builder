@@ -30,6 +30,7 @@ export const useBuilderStore = create((set) => ({
   resizeStartHeight: 0,
   resizeStartX: 0,
   resizeStartY: 0,
+  resizeAspectRatio: null,
   collisionId: null,
   lastSafeState: null,
 
@@ -114,6 +115,8 @@ export const useBuilderStore = create((set) => ({
           : el
       ),
     })),
+
+  setResizeAspectRatio: (v) => set({ resizeAspectRatio: v }),
 
   setCollision: (id) =>
     set(() => ({

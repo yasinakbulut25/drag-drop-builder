@@ -74,11 +74,24 @@ export default function ElementRenderer({ element }) {
   const handleResizeStart = (e, element) => {
     e.stopPropagation();
     startResize(element);
-
     setLastSafePozition(element);
+
+    const width = element.position.width;
+    const height = element.position.height;
+    let ratio = null;
+
+    if (
+      typeof width === "number" &&
+      typeof height === "number" &&
+      height !== 0
+    ) {
+      ratio = width / height;
+    }
+
     useBuilderStore.setState({
       resizeStartX: e.clientX,
       resizeStartY: e.clientY,
+      resizeAspectRatio: ratio,
     });
   };
 
