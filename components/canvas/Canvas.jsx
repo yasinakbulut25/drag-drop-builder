@@ -7,6 +7,7 @@ import { calculateDropPosition } from "@/lib/dragEngine/dropCalculator";
 import { allowDrop } from "@/lib/dragEngine/dragHandlers";
 import ElementRenderer from "./ElementRenderer";
 import { isColliding } from "@/lib/dragEngine/collision";
+import { checkCollision } from "@/lib/dragEngine/collisionCheck";
 
 export default function Canvas() {
   const {
@@ -53,6 +54,21 @@ export default function Canvas() {
         newHeight = Math.max(30, newHeight);
 
         resizeElement(resizeId, newWidth, newHeight);
+
+        const resizingElement = elements.find((el) => el.id === resizeId);
+
+        const resizingBox = {
+          x: resizingElement.position.x,
+          y: resizingElement.position.y,
+          width: newWidth,
+          height: newHeight,
+        };
+
+        const collidedId = checkCollision(resizingBox, elements, resizeId);
+
+        if (collidedId) setCollision(collidedId);
+        else clearCollision();
+
         return;
       }
 
@@ -66,48 +82,30 @@ export default function Canvas() {
         x = Math.max(0, x);
         y = Math.max(0, y);
 
-        const grid = canvas.grid;
-        if (grid.enabled && grid.snap) {
-          const size = grid.size;
+        if (canvas.grid.enabled && canvas.grid.snap) {
+          const size = canvas.grid.size;
           x = Math.round(x / size) * size;
           y = Math.round(y / size) * size;
         }
 
         moveElement(draggingId, x, y);
 
-        const movingEl = elements.find((el) => el.id === draggingId);
+        const moving = elements.find((el) => el.id === draggingId);
 
         const movingBox = {
           x,
           y,
           width:
-            typeof movingEl.position.width === "number"
-              ? movingEl.position.width
+            typeof moving.position.width === "number"
+              ? moving.position.width
               : 200,
           height:
-            typeof movingEl.position.height === "number"
-              ? movingEl.position.height
+            typeof moving.position.height === "number"
+              ? moving.position.height
               : 50,
         };
 
-        let collidedId = null;
-
-        elements.forEach((el) => {
-          if (el.id === draggingId) return;
-
-          const box = {
-            x: el.position.x,
-            y: el.position.y,
-            width:
-              typeof el.position.width === "number" ? el.position.width : 200,
-            height:
-              typeof el.position.height === "number" ? el.position.height : 50,
-          };
-
-          if (isColliding(movingBox, box)) {
-            collidedId = el.id;
-          }
-        });
+        const collidedId = checkCollision(movingBox, elements, draggingId);
 
         if (collidedId) setCollision(collidedId);
         else clearCollision();

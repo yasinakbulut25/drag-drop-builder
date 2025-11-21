@@ -1,4 +1,4 @@
-export default function FooterElement({ data }) {
+export default function FooterElement({ data, collisionId }) {
   const style = {
     width: data.position.width || "100%",
     height:
@@ -10,15 +10,16 @@ export default function FooterElement({ data }) {
   return (
     <footer
       style={style}
-      className="
+      className={`
         bg-gray-900 
         text-gray-300 
         flex 
         items-center 
         justify-center 
         text-sm
+        ${collisionId ? "cursor-no-drop" : "cursor-grab active:cursor-grabbing"}
         footer-element
-      "
+      `}
     >
       {data.content?.copyright || "© 2024 Test Builder"}
     </footer>

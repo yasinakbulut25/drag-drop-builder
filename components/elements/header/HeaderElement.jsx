@@ -1,4 +1,4 @@
-export default function HeaderElement({ data }) {
+export default function HeaderElement({ data, collisionId }) {
   const style = {
     width: data.position.width,
     height:
@@ -10,7 +10,7 @@ export default function HeaderElement({ data }) {
   return (
     <h1
       style={style}
-      className="bg-zinc-100 
+      className={`bg-zinc-100 
         border-b 
         border-zinc-200 
         text-black 
@@ -19,8 +19,9 @@ export default function HeaderElement({ data }) {
         flex 
         items-center 
         font-bold
+        ${collisionId ? "cursor-no-drop" : "cursor-grab active:cursor-grabbing"}
         header-element
-      "
+      `}
     >
       {data.content.text}
     </h1>

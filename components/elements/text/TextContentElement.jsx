@@ -1,4 +1,4 @@
-export default function TextContentElement({ data }) {
+export default function TextContentElement({ data, collisionId }) {
   const style = {
     width:
       typeof data.position.width === "number"
@@ -9,7 +9,12 @@ export default function TextContentElement({ data }) {
   };
 
   return (
-    <div style={style} className="text-content-element min-h-max min-w-min">
+    <div
+      style={style}
+      className={`text-content-element min-h-max min-w-min
+        ${collisionId ? "cursor-no-drop" : "cursor-grab active:cursor-grabbing"}
+    `}
+    >
       <p className="text-black">{data.content.plainText}</p>
     </div>
   );

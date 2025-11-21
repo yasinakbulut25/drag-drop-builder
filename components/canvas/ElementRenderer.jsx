@@ -22,15 +22,15 @@ export default function ElementRenderer({ element }) {
   const renderByType = () => {
     switch (element.type) {
       case "header":
-        return <HeaderElement data={element} />;
+        return <HeaderElement data={element} collisionId={collisionId} />;
       case "card":
-        return <CardElement data={element} />;
+        return <CardElement data={element} collisionId={collisionId} />;
       case "text-content":
-        return <TextContentElement data={element} />;
+        return <TextContentElement data={element} collisionId={collisionId} />;
       case "slider":
-        return <SliderElement data={element} />;
+        return <SliderElement data={element} collisionId={collisionId} />;
       case "footer":
-        return <FooterElement data={element} />;
+        return <FooterElement data={element} collisionId={collisionId} />;
       default:
         return null;
     }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function SliderElement({ data }) {
+export default function SliderElement({ data, collisionId }) {
   const style = {
     width: data.position.width || "100%",
     height:
@@ -12,7 +12,7 @@ export default function SliderElement({ data }) {
   return (
     <div
       style={style}
-      className="
+      className={`
         bg-zinc-100 
         border
         border-zinc-200
@@ -24,8 +24,9 @@ export default function SliderElement({ data }) {
         text-xl 
         font-semibold
         overflow-hidden
+        ${collisionId ? "cursor-no-drop" : "cursor-grab active:cursor-grabbing"}
         slider-element
-      "
+      `}
     >
       {data.content.images?.length > 0 ? (
         <div className="flex w-full h-full">

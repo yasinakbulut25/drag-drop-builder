@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function CardElement({ data }) {
+export default function CardElement({ data, collisionId }) {
   const style = {
     minWidth: data.position.width || 300,
     minHeight:
@@ -12,7 +12,7 @@ export default function CardElement({ data }) {
   return (
     <div
       style={style}
-      className="
+      className={`
         bg-white
         border 
         border-slate-300
@@ -23,8 +23,9 @@ export default function CardElement({ data }) {
         gap-2 
         justify-between
         overflow-hidden
+        ${collisionId ? "cursor-no-drop" : "cursor-grab active:cursor-grabbing"}
         card-element
-      "
+      `}
     >
       <h3 className="text-lg font-semibold text-gray-800">
         {data.content.title}
