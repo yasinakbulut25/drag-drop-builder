@@ -23,7 +23,7 @@ export default function Canvas() {
       id="canvas"
       onDrop={handleDrop}
       onDragOver={allowDrop}
-      className="w-full h-full flex-1 relative overflow-auto m-auto"
+      className="w-full h-full relative overflow-auto m-auto"
     >
       {elements.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full h-full">

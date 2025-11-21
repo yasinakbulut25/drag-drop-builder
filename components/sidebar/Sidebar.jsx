@@ -40,7 +40,7 @@ const Elements = [
 
 export default function Sidebar() {
   return (
-    <aside className="w-72 bg-zinc-50 border-l border-zinc-200 px-4 py-6">
+    <aside className="w-72 bg-zinc-50 border-l border-zinc-200 px-4 py-6 z-50">
       <div className="flex items-center gap-2 mb-6">
         <MousePointerClickIcon width={20} height={20} className="text-black" />
         <h2 className="text-base font-bold">Elements</h2>
