@@ -7,6 +7,7 @@ import TextContentElement from "../elements/text/TextContentElement";
 import SliderElement from "../elements/slider/SliderElement";
 import FooterElement from "../elements/footer/FooterElement";
 import { getElementWrapperClassAndStyle } from "@/lib/utils";
+import { MoveDiagonal2Icon } from "lucide-react";
 
 export default function ElementRenderer({ element }) {
   const { selectedId, selectElement } = useBuilderStore();
@@ -33,13 +34,12 @@ export default function ElementRenderer({ element }) {
     selectedId
   );
 
+  const isSticky = element.positionBehavior === "sticky-top";
+  const isBottom = element.positionBehavior === "bottom";
+  const isFixed = element.fixed;
+
   const handleMouseDown = (e) => {
-    if (
-      element.positionBehavior === "sticky-top" ||
-      element.positionBehavior === "bottom" ||
-      element.fixed
-    )
-      return;
+    if (isSticky || isBottom || isFixed) return;
 
     e.stopPropagation();
 
@@ -49,6 +49,19 @@ export default function ElementRenderer({ element }) {
       dragOffsetY: e.clientY - element.position.y,
     });
   };
+
+  const handleResizeStart = (e, element) => {
+    e.stopPropagation();
+    useBuilderStore.getState().startResize(element);
+
+    useBuilderStore.setState({
+      resizeStartX: e.clientX,
+      resizeStartY: e.clientY,
+    });
+  };
+
+  const canResize =
+    !isSticky && !isBottom && !isFixed && selectedId === element.id;
 
   return (
     <div
@@ -60,6 +73,12 @@ export default function ElementRenderer({ element }) {
         selectElement(element.id);
       }}
     >
+      {canResize && (
+        <MoveDiagonal2Icon
+          className="absolute bottom-0 right-0 w-4 h-4 bg-indigo-500 text-white p-0.5 rounded-sm cursor-se-resize"
+          onMouseDown={(e) => handleResizeStart(e, element)}
+        />
+      )}
       {renderByType()}
     </div>
   );

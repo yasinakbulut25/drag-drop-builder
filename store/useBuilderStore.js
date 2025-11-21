@@ -25,6 +25,11 @@ export const useBuilderStore = create((set) => ({
   draggingId: null,
   dragOffsetX: 0,
   dragOffsetY: 0,
+  resizeId: null,
+  resizeStartWidth: 0,
+  resizeStartHeight: 0,
+  resizeStartX: 0,
+  resizeStartY: 0,
 
   addElement: (type, pos) =>
     set((state) => {
@@ -67,6 +72,34 @@ export const useBuilderStore = create((set) => ({
                 ...el.position,
                 x,
                 y,
+              },
+            }
+          : el
+      ),
+    })),
+
+  startResize: (element) =>
+    set(() => ({
+      resizeId: element.id,
+      resizeStartWidth: element.position.width,
+      resizeStartHeight: element.position.height,
+    })),
+
+  stopResize: () =>
+    set(() => ({
+      resizeId: null,
+    })),
+
+  resizeElement: (id, width, height) =>
+    set((state) => ({
+      elements: state.elements.map((el) =>
+        el.id === id
+          ? {
+              ...el,
+              position: {
+                ...el.position,
+                width,
+                height,
               },
             }
           : el

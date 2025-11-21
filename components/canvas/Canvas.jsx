@@ -9,13 +9,19 @@ import ElementRenderer from "./ElementRenderer";
 
 export default function Canvas() {
   const {
+    canvas,
     elements,
     addElement,
     draggingId,
     dragOffsetX,
     dragOffsetY,
     moveElement,
-    canvas,
+    resizeId,
+    resizeStartWidth,
+    resizeStartHeight,
+    resizeStartX,
+    resizeStartY,
+    resizeElement,
   } = useBuilderStore();
 
   const handleDrop = (e) => {
@@ -27,28 +33,50 @@ export default function Canvas() {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (!draggingId) return;
+      if (resizeId) {
+        const deltaX = e.clientX - resizeStartX;
+        const deltaY = e.clientY - resizeStartY;
 
-      const canvasRoot = document.getElementById("canvas-root");
-      const rect = canvasRoot.getBoundingClientRect();
+        let newWidth = resizeStartWidth + deltaX;
+        let newHeight = resizeStartHeight + deltaY;
 
-      let x = e.clientX - rect.left - dragOffsetX;
-      let y = e.clientY - rect.top - dragOffsetY;
+        if (canvas.grid.enabled && canvas.grid.snap) {
+          const size = canvas.grid.size;
+          newWidth = Math.round(newWidth / size) * size;
+          newHeight = Math.round(newHeight / size) * size;
+        }
 
-      x = Math.max(0, x);
-      y = Math.max(0, y);
+        newWidth = Math.max(50, newWidth);
+        newHeight = Math.max(30, newHeight);
 
-      const grid = canvas.grid;
-      if (grid.enabled && grid.snap) {
-        x = Math.round(x / grid.size) * grid.size;
-        y = Math.round(y / grid.size) * grid.size;
+        resizeElement(resizeId, newWidth, newHeight);
+        return;
       }
 
-      moveElement(draggingId, x, y);
+      if (draggingId) {
+        const canvasRoot = document.getElementById("canvas-root");
+        const rect = canvasRoot.getBoundingClientRect();
+
+        let x = e.clientX - rect.left - dragOffsetX;
+        let y = e.clientY - rect.top - dragOffsetY;
+
+        x = Math.max(0, x);
+        y = Math.max(0, y);
+
+        const grid = canvas.grid;
+        if (grid.enabled && grid.snap) {
+          const size = grid.size;
+          x = Math.round(x / size) * size;
+          y = Math.round(y / size) * size;
+        }
+
+        moveElement(draggingId, x, y);
+      }
     };
 
     const handleMouseUp = () => {
       useBuilderStore.setState({ draggingId: null });
+      useBuilderStore.getState().stopResize();
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -58,12 +86,24 @@ export default function Canvas() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [draggingId, dragOffsetX, dragOffsetY, moveElement, canvas]);
+  }, [
+    draggingId,
+    dragOffsetX,
+    dragOffsetY,
+    moveElement,
+    canvas,
+    resizeId,
+    resizeStartX,
+    resizeStartY,
+    resizeStartWidth,
+    resizeStartHeight,
+    resizeElement,
+  ]);
 
   const canvasStyle = {
     backgroundImage: canvas.grid.enabled
       ? `linear-gradient(#e5e7eb 1px, transparent 1px),
-       linear-gradient(90deg, #e5e7eb 1px, transparent 1px)`
+         linear-gradient(90deg, #e5e7eb 1px, transparent 1px)`
       : "none",
     backgroundSize: `${canvas.grid.size}px ${canvas.grid.size}px`,
   };
