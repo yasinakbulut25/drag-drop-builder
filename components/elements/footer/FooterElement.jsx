@@ -5,7 +5,6 @@ export default function FooterElement({ data }) {
       typeof data.position.height === "number"
         ? `${data.position.height}px`
         : data.position.height,
-    zIndex: data.position.zIndex || 1,
   };
 
   return (

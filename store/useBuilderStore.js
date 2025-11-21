@@ -123,6 +123,33 @@ export const useBuilderStore = create((set) => ({
       collisionId: null,
     })),
 
+  increaseZIndex: (id) =>
+    set((state) => ({
+      elements: state.elements.map((el) =>
+        el.id === id
+          ? {
+              ...el,
+              position: { ...el.position, zIndex: el.position.zIndex + 1 },
+            }
+          : el
+      ),
+    })),
+
+  decreaseZIndex: (id) =>
+    set((state) => ({
+      elements: state.elements.map((el) =>
+        el.id === id
+          ? {
+              ...el,
+              position: {
+                ...el.position,
+                zIndex: Math.max(1, el.position.zIndex - 1),
+              },
+            }
+          : el
+      ),
+    })),
+
   toggleGrid: () =>
     set((state) => ({
       canvas: {

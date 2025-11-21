@@ -7,7 +7,6 @@ export default function CardElement({ data }) {
       typeof data.position.height === "number"
         ? `${data.position.height}px`
         : data.position.height,
-    zIndex: data.position.zIndex,
   };
 
   return (
