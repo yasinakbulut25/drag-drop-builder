@@ -4,6 +4,8 @@ Bu proje, kullanıcıların bir sayfa düzenini görsel olarak oluşturmasını 
 
 Proje, Next.js App Router, React ve TailwindCSS kullanılarak geliştirilmiştir;
 
+**Live Project:** https://drag-drop-builder-ten.vercel.app/
+
 ## Projenin Amacı
 
 * Canvas alanı üzerinde sürüklenebilir, yerleştirilebilir ve düzenlenebilir element yapısı oluşturmak
