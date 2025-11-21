@@ -11,6 +11,7 @@ import {
   EyeOffIcon,
   ChevronUpIcon,
   ChevronDownIcon,
+  BracesIcon,
 } from "lucide-react";
 import ElementItem from "./ElementItem";
 import { useBuilderStore } from "@/store/useBuilderStore";
@@ -51,6 +52,7 @@ export default function Sidebar() {
     selectedId,
     increaseZIndex,
     decreaseZIndex,
+    exportJson,
   } = useBuilderStore();
 
   const selectedElement = elements.find((el) => el.id === selectedId);
@@ -116,6 +118,14 @@ export default function Sidebar() {
               Grid Snap Göster
             </>
           )}
+        </button>
+
+        <button
+          onClick={exportJson}
+          className="cursor-pointer w-full flex items-center gap-2 p-3  text-white text-sm bg-black rounded-lg"
+        >
+          <BracesIcon className="text-white min-w-5 w-5" />
+          Export JSON to console
         </button>
       </div>
     </aside>

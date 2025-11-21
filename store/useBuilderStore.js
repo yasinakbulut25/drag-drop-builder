@@ -192,4 +192,38 @@ export const useBuilderStore = create((set) => ({
         },
       },
     })),
+
+  exportJson: () => {
+    const state = useBuilderStore.getState();
+
+    const exportData = {
+      project: {
+        name: "Test Builder Layout",
+        version: "1.0",
+        created: state.project?.created || new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+      },
+      canvas: {
+        width: state.canvas.width,
+        height: state.canvas.height,
+        grid: state.canvas.grid,
+      },
+      elements: state.elements.map((el) => ({
+        id: el.id,
+        type: el.type,
+        content: el.content,
+        position: el.position,
+        positionBehavior: el.positionBehavior,
+        fixed: el.fixed,
+        responsive: el.responsive,
+      })),
+      metadata: {
+        totalElements: state.elements.length,
+        exportFormat: "json",
+        exportVersion: "2.0",
+      },
+    };
+
+    console.log("EXPORT JSON => ", exportData);
+  },
 }));

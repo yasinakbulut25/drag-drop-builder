@@ -6,7 +6,6 @@ import { useBuilderStore } from "@/store/useBuilderStore";
 import { calculateDropPosition } from "@/lib/dragEngine/dropCalculator";
 import { allowDrop } from "@/lib/dragEngine/dragHandlers";
 import ElementRenderer from "./ElementRenderer";
-import { isColliding } from "@/lib/dragEngine/collision";
 import { checkCollision } from "@/lib/dragEngine/collisionCheck";
 
 export default function Canvas() {
