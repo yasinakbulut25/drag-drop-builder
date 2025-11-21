@@ -31,6 +31,7 @@ export const useBuilderStore = create((set) => ({
   resizeStartX: 0,
   resizeStartY: 0,
   collisionId: null,
+  lastSafeState: null,
 
   addElement: (type, pos) =>
     set((state) => {
@@ -150,6 +151,33 @@ export const useBuilderStore = create((set) => ({
           : el
       ),
     })),
+
+  setLastSafeState: (data) => set({ lastSafeState: data }),
+
+  restoreLastSafeState: () =>
+    set((state) => {
+      if (!state.lastSafeState) return {};
+
+      const { id, x, y, width, height } = state.lastSafeState;
+
+      return {
+        elements: state.elements.map((el) =>
+          el.id === id
+            ? {
+                ...el,
+                position: {
+                  ...el.position,
+                  x,
+                  y,
+                  width,
+                  height,
+                },
+              }
+            : el
+        ),
+        lastSafeState: null,
+      };
+    }),
 
   toggleGrid: () =>
     set((state) => ({

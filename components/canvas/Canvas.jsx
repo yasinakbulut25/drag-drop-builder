@@ -26,6 +26,8 @@ export default function Canvas() {
     resizeElement,
     setCollision,
     clearCollision,
+    restoreLastSafeState,
+    collisionId,
   } = useBuilderStore();
 
   const handleDrop = (e) => {
@@ -113,9 +115,15 @@ export default function Canvas() {
     };
 
     const handleMouseUp = () => {
+      const collisionDetected = !!collisionId;
+
+      if (collisionDetected) {
+        restoreLastSafeState();
+        clearCollision();
+      }
+
       useBuilderStore.setState({ draggingId: null });
       useBuilderStore.getState().stopResize();
-      clearCollision();
     };
 
     window.addEventListener("mousemove", handleMouseMove);

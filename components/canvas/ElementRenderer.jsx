@@ -16,6 +16,8 @@ export default function ElementRenderer({ element }) {
     collisionId,
     clearCollision,
     removeElement,
+    setLastSafeState,
+    startResize,
   } = useBuilderStore();
   const isCollision = collisionId === element.id;
 
@@ -46,11 +48,22 @@ export default function ElementRenderer({ element }) {
   const isBottom = element.positionBehavior === "bottom";
   const isFixed = element.fixed;
 
+  const setLastSafePozition = (element) => {
+    setLastSafeState({
+      id: element.id,
+      x: element.position.x,
+      y: element.position.y,
+      width: element.position.width,
+      height: element.position.height,
+    });
+  };
+
   const handleMouseDown = (e) => {
     if (isSticky || isBottom || isFixed) return;
 
     e.stopPropagation();
 
+    setLastSafePozition(element);
     useBuilderStore.setState({
       draggingId: element.id,
       dragOffsetX: e.clientX - element.position.x,
@@ -60,8 +73,9 @@ export default function ElementRenderer({ element }) {
 
   const handleResizeStart = (e, element) => {
     e.stopPropagation();
-    useBuilderStore.getState().startResize(element);
+    startResize(element);
 
+    setLastSafePozition(element);
     useBuilderStore.setState({
       resizeStartX: e.clientX,
       resizeStartY: e.clientY,
